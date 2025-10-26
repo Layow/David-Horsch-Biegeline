@@ -133,16 +133,16 @@ def biegelinie_r(
 
 # Example parameters (edit these to your device). Units SI.
 params = dict(
-    Dm = 30e-6,   # silicon thickness [m]
-    Dp = 0.5e-6,  # piezoceramic thickness [m]
+    Dm = 110e-6,   # silicon thickness [m]
+    Dp = 190e-6,  # piezoceramic thickness [m]
     Em = 170e9,   # Young's modulus silicon [Pa]
-    Ep = 63e9,    # Young's modulus PZT-5H approx [Pa]
+    Ep = 66e9,    # Young's modulus PZT-5H approx [Pa]
     nu = 0.22,    # Poisson ratio silicon [-]
     d31 = -175e-12, # PZT-5H d31 [C/N]
     E33 = 2e6,    # Applied electric field in piezo [V/m] (example)
-    p = 100,      # Pressure load [Pa] (example)
-    Rm = 2.5e-3,  # membrane radius [m]
-    Rp = 1.0e-3   # piezo radius [m]
+    p = 1000,      # Pressure load [Pa] (example)
+    Rm = 3.35e-3,  # membrane radius [m]
+    Rp = 3e-3   # piezo radius [m]
 )
 
 # Build r grid and compute w(r)
