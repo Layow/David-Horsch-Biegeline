@@ -140,7 +140,7 @@ params = dict(
     nu = 0.22,    # Poisson ratio silicon [-]
     d31 = -175e-12, # PZT-5H d31 [C/N]
     E33 = 2e6,    # Applied electric field in piezo [V/m] (example)
-    p = 1000,      # Pressure load [Pa] (example)
+    p = 100,      # Pressure load [Pa] (example)
     Rm = 3.35e-3,  # membrane radius [m]
     Rp = 3e-3   # piezo radius [m]
 )
