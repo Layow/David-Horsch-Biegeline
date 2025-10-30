@@ -1,6 +1,5 @@
 # Python tool will:
 # - define functions for the two-region plate deflection (Biegelinie) from the user's Mathematica expressions
-# - provide a simple plotting routine for r in [0, Rm]
 # - include an example parameter set the user can edit
 #
 # Notes:
@@ -136,11 +135,11 @@ params = dict(
     Dm = 110e-6,   # silicon thickness [m]
     Dp = 190e-6,  # piezoceramic thickness [m]
     Em = 170e9,   # Young's modulus silicon [Pa]
-    Ep = 66e9,    # Young's modulus PZT-5H approx [Pa]
-    nu = 0.22,    # Poisson ratio silicon [-]
-    d31 = -175e-12, # PZT-5H d31 [C/N]
-    E33 = 2e6,    # Applied electric field in piezo [V/m] (example)
-    p = 3000,      # Pressure load [Pa] (example)
+    Ep = 66e9,    # Young's modulus approx [Pa] aus Davids arbeit
+    nu = 0.3,    # Poisson ratio silicon [-] von der David arbeit gemeinsame Kontraktionszahl
+    d31 = -210e-12, # Piezo koeffizient [C/N] aus Davids Diplomarbeit 
+    E33 = 4.2e5,    # Applied electric field in piezo [V/m] (example) !!!KEINE AHNUNG WELCHER WERT HIER 
+    p = 0000,      # Pressure load [Pa] (example)
     Rm = 3.35e-3,  # membrane radius [m]
     Rp = 3e-3   # piezo radius [m]
 )
@@ -156,11 +155,7 @@ plt.figure()
 plt.plot(r, w, label="w(r)")
 plt.xlabel("r [m]")
 plt.ylabel("Deflection w [m]")
-plt.title("Biegelinie der Membran mit konzentrischem Piezo")
+plt.title("Biegelinie Membran mit Piezo")
 plt.grid(True)
 plt.legend()
 plt.show()
-
-# Also return a small helper that users can call again
-print("Call biegelinie_r(r, Dm, Dp, Em, Ep, nu, d31, E33, p, Rm, Rp) with your parameters.\n"
-      "Region 1: r <= Rp. Region 2: Rp < r <= Rm.")
