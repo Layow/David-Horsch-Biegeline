@@ -3,7 +3,7 @@ import numpy as np
 
 # Schritt 1: Symbole definieren
 print("=== Schritt 1: Symbol-Definition ===")
-r = sp.Symbol('r', real=True, nonnegative=True) #null muss auch noch dron sein
+r = sp.Symbol('r', real=True, nonnegative=True) #null muss auch enthalten sein
 Dm, Em, Dp, Ep, Rm, Rp, D = sp.symbols('Dm Em Dp Ep Rm Rp D', real=True, positive=True)
 d31, E33, p, nu = sp.symbols('d31 E33 p nu', real=True)
 
@@ -14,38 +14,16 @@ w1 = (1/16)*( (r**2*(-3*(Dm*Em+Dp*Ep)*p*r**2*(-1+nu**2)+(6*(1+nu)*(16*d31*Dm*Dp*
 w2 = (3*(1+nu)*((-(r-Rm)*(r+Rm)*(32*d31*Dm**5*Dp*E33*Em**2*Ep*Rm**2*Rp**2+4*Dm**4*Em**2*Rm**2*(8*d31*Dp**2*E33*Ep*Rp**2+p*(r-Rm)*Rm**2*(r+Rm)*(-1+nu))+Dp**4*Ep**2*p*(Rm-Rp)**2*(Rm+Rp)**2*(r**2-Rm**2-2*Rp**2)*(-1+nu)*(1+nu)**2-12*Dm**2*Dp**2*Em*Ep*p*Rm**2*(Rm-Rp)*(Rm+Rp)*(-r**2+Rm**2+2*Rp**2)*(-1+nu**2)-8*Dm*Dp**3*Em*Ep*p*Rm**2*(Rm-Rp)*(Rm+Rp)*(-r**2+Rm**2+2*Rp**2)*(-1+nu**2)-4*Dm**3*Dp*Em*Ep*p*Rm**2*(Rm-Rp)*(Rm+Rp)*(-2*r**2+2*Rm**2+3*Rp**2)*(-1+nu**2)))+4*Dp*Ep*Rm**2*Rp**2*(16*d31*Dm**4*(Dm+Dp)*E33*Em**2*Rm**2-p*(Rm-Rp)*(Rm+Rp)*(-1+nu)*(1+nu)*(6*Dm**3*Em*Rm**2+12*Dm**2*Dp*Em*Rm**2+8*Dm*Dp**2*Em*Rm**2+Dp**3*Ep*(Rm-Rp)*(Rm+Rp)*(1+nu)))*(sp.log(r)-sp.log(Rm))))/(16*Dm**3*Em*(4*Dm**4*Em**2*Rm**4+8*Dm**3*Dp*Em*Ep*Rm**2*(Rm-Rp)*(Rm+Rp)*(1+nu)+12*Dm**2*Dp**2*Em*Ep*Rm**2*(Rm-Rp)*(Rm+Rp)*(1+nu)+8*Dm*Dp**3*Em*Ep*Rm**2*(Rm-Rp)*(Rm+Rp)*(1+nu)+Dp**4*Ep**2*(Rm-Rp)**2*(Rm+Rp)**2*(1+nu)**2))
 
 w = sp.Piecewise(           #Hier mache ich die beiden einzelregionen into one
-    (w1, r<= Rm),
-    (w2, r> Rm)
+    (w1, r <= Rm),
+    (w2, r > Rm)
 )
-# Schritt 3: Erste Ableitungen berechnen
-print("\n=== Schritt 3: Erste Ableitungen ===") #die === sind aus rein ästhetischen Gründen da und nada mas.
-def erste_ableitung_region(w):
-    w_r = sp.diff(w, r)
-    return w_r
-
-w_r = erste_ableitung_region(w) # "Neigung"
-
-# Schritt 4: Zweite Ableitungen berechnen  
-print("\n=== Schritt 4: Zweite Ableitungen ===")
-def zweite_ableitung(w):
-    w_rr = sp.diff(w_r, r)
-    return w_rr
-
-w1_rr = zweite_ableitung(w) # "Krümmung"
 
 params = {
     Dm:110e-6, Em:170e9, Dp:190e-6, Ep:65e9,
     Rm:3.35e-3, Rp:3e-3, d31:2e-12, E33:150e9,
-    p:100, nu:0.30
+    p:100, nu:0.30, D:0.125 #this D value is grossly approximated. like all the other for now
 }
 
-'''
-w_num = sp.lambdify((r, Dm, Em, Dp, Ep, Rm, Rp, d31, E33, p, nu), w, "numpy")  #this I have no clue whats happening 
-
-r_vals = np.linspace(0.0, params[Rm], 100)
-w_vals = w_num(r_vals, params[Dm], params[Em], params[Dp], params[Ep],
-               params[Rm], params[Rp], params[d31], params[E33], params[p], params[nu])
-'''
 
 #Schritt 5 Biegeenergie U bestimmen
 print("\n=== Schritt 5: Hilfsterme für Biegeenergie U bestimmen===")
@@ -59,7 +37,7 @@ def integrand(w):
 
 print("\n=== Schritt 6: Biegeenergie berechnen===")
 
-U = sp.integrate(integrand(w), (r, 0, Rm)) #integrand oder integrand(w)?
+U = sp.pi * D * sp.integrate(integrand(w), (r, 0, Rm)) #dieser Schritt hier dauert zu lange
 print("Biegeenergie Symbolisch =", U)
 
 U_num = sp.N(U.subs(params))
